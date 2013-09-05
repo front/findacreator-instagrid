@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Find a Creator</title>
+    <style>
+
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+      jQuery(document).ready(function($) {
+        var items = 10;
+        var page = 1;
+
+        // Ajax call
+        $.ajax({
+          url: "http://findacreator.meatdigital.no/api/json",
+          type: 'POST',
+          contentType: 'application/json',
+          data : '{"method":"getContestants","params":['+items+','+page+'],"id":1}',
+          error: function(data) {},
+          success: function(data) {
+            var results = data.result;
+
+            for (var i = 0; i < results.length; i++) {
+              li = '<li><b>Username:</b> ' + results[i].username + '</li>';
+              li += '<li><b>Tag:</b> ' + results[i].body + '</li>';
+              li += '<li><b>Image:</b> <img src="' + results[i].large + '"></li>';
+              li += '<li><b>Thumbnail:</b> <img src="' + results[i].thumb + '"></li>';
+              li += '<li><a href="' + results[i].video + '">Video</a></li>';
+              li += '<hr/>';
+
+              $('#results').append(li);
+            };
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Find a Creator</h1>
+
+    <ul id="results"></ul>
+
+    <!--
+    <li><b>Username:</b> </li>
+    <li><b>Tag:</b> </li>
+    <li><b>Image:</b> </li>
+    <li><b>Thumbnail:</b> </li>
+    <li><b>Video:</b> </li>
+    -->
+  </body>
+</html>

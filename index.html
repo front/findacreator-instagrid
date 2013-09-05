@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <title>Galereya.</title>
+
+  <link href='http://fonts.googleapis.com/css?family=Scada:400,400italic,700,700italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/jquery.galereya.css">
+  <!--[if lt IE 9]>
+  <link rel="stylesheet" href="css/jquery.galereya.ie.css">
+  <![endif]-->
+  <style>
+    .galereya-top {
+      position: fixed;
+      background: #f6f6f6;
+      background: rgba(246, 246, 246, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <div id="gallery"></div>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="js/jquery.galereya.min.js"></script>
+  <script>
+    (function loadPics() {
+      var items = 20;
+      var page = 1;
+      $('#gallery').galereya({
+        load: function(next) {
+          $.ajax({
+            type: 'POST',
+            url: 'http://findacreator.meatdigital.no/api/json',
+            data : '{"method":"getContestants","params":['+items+','+page+'],"id":1}',
+            success: function(data) {
+              // console.log(data);
+              var items = [];
+              for(var i = 0; i < data.result.length; i++) {
+                var x = data.result[i];
+                /* var ix = x.large.indexOf('?');
+                var src = x.large.substr(0,ix);
+                var width = Math.floor(Math.random()*300)+200;
+                var fnl = src + '?width=' + width + '&height=' + width + '&quality=80'; */
+                items.push({
+                  lowsrc: x.large,
+                  fullsrc: x.large,
+                  description: x.body,
+                  category: ''
+                });
+              }
+              // console.log(items);
+              next(items);
+            }
+          });
+        }
+      });
+      setTimeout(function () {
+        window.location.reload(1);
+      }, 200000);
+    })();
+  </script>
+</body>
+</html>
